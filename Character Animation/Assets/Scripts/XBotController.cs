@@ -9,18 +9,28 @@ public class XBotController : MonoBehaviour
 	NavMeshAgent agent;
 	
 	int isWalkingHash;
+    int velocityXHash;
+    int velocityZHash;
 	
 	private void Awake() {
 		animator = GetComponent<Animator>();
 		agent = GetComponent<NavMeshAgent>();
 		
 		isWalkingHash = Animator.StringToHash("isWalking");
+        velocityXHash = Animator.StringToHash("velocityX");
+        velocityZHash = Animator.StringToHash("velocityZ");
 	}
 	
 	private void Update() {
-		bool isMoving = agent.velocity.magnitude > 0.01f && agent.remainingDistance > agent.radius;
+        Vector3 velocity = agent.velocity;
+        
+		bool isMoving = velocity.magnitude > 0.01f && agent.remainingDistance > agent.radius;
 	
 		animator.SetBool(isWalkingHash, isMoving);
+        
+        velocity = transform.InverseTransformVector(velocity);
 //		transform.position += transform.forward * Time.deltaTime;
+        animator.SetFloat(velocityXHash, velocity.x);
+        animator.SetFloat(velocityZHash, velocity.z);
 	}
 }
